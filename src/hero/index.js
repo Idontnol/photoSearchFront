@@ -1,7 +1,10 @@
 import {useState} from 'react';
 import {Rings} from 'react-loader-spinner';
 import {motion} from 'framer-motion';
+import dotenv from 'dotenv';
+
 import './index.css';
+dotenv.config();
 
 const Hero=()=>{
 
@@ -13,9 +16,10 @@ const Hero=()=>{
 
     const fetchImages=async(e)=>{
         e.preventDefault();
+        const clients_id=process.env.clients_id;
         if(userQuery){
             setIsLoading(true);
-            const results= await fetch(`https://api.unsplash.com/search/photos?query=${userQuery}&client_id=_-F6scScvqFOvyOCNKz_rxYK1s3Zdr6AH4vaKqjfvdU`);
+            const results= await fetch(`https://api.unsplash.com/search/photos?query=${userQuery}&client_id=${clients_id}`);
             const data=await results.json();
             setFetchedData(data.results);
             setIsLoading(false);
