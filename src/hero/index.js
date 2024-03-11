@@ -16,7 +16,7 @@ const Hero=()=>{
 
     const fetchImages=async(e)=>{
         e.preventDefault();
-        const clients_id=String(process.env.clients_id);
+        const clients_id=process.env.clients_id;
         if(userQuery){
             setIsLoading(true);
             const results= await fetch(`https://api.unsplash.com/search/photos?query=${userQuery}&client_id=${clients_id}`);
