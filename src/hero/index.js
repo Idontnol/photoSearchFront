@@ -1,10 +1,10 @@
 import {useState} from 'react';
 import {Rings} from 'react-loader-spinner';
 import {motion} from 'framer-motion';
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 
 import './index.css';
-dotenv.config();
+// dotenv.config();
 
 const Hero=()=>{
 
