@@ -39,6 +39,7 @@ const Main=()=>{
         width:'100vw',
     }
 
+
     return(
         <div>
             <h1>Upload your image</h1>
