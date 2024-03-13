@@ -1,68 +1,57 @@
 import {useState} from 'react';
+import { analyzeImage } from '../utils/googleCloudVisionApi';
+import './index.css';
 
 const Main=()=>{
     const [image,setImage]=useState('');
     const [error,setError]=useState('');
-    const [userQuery,setUserQuery]=useState('');
-    const [fetchedData,setFetchedData]=useState([]);
+    const [imageUrl,setImageUrl]=useState('');
+    const [apiError,setApiError]=useState('');
 
     const handleImageChange=(e)=>{
         const selectedImage=e.target.files[0];
         //even though we mentioned accept input only image they can override (or) insert empty so validation required
         if(selectedImage && selectedImage.type.match('image/*')  ){
             setImage(selectedImage);
+            const userImageUrl = URL.createObjectURL(selectedImage);
+            setImageUrl(userImageUrl);
+            console.log(userImageUrl);
         }
         else{
             setError("*please select a valid image");
         }
     }
-
-    const loadUploadedImage=()=>{
-        if(image){
-            console.log(image);
-            console.log("image inserted successfully");
-        }
-        else{
-            setError("*image is missing");
+    const anwers=async()=>{
+        try{
+        const ans=await analyzeImage(image);
+        // const ne= await ans.json();
+        console.log(ans);
+        // console.log(ne);
+    }
+        catch(e){
+            console.log("main",e);
+            console.log(e.message,"here");
+            setApiError(e.message+" quota exceeded");
         }
     }
-
-    const fetchImages=async()=>{
-        if(userQuery){
-            const results= await fetch(`https://api.unsplash.com/search/photos?query=${userQuery}&client_id=_-F6scScvqFOvyOCNKz_rxYK1s3Zdr6AH4vaKqjfvdU`);
-            const data=await results.json();
-            setFetchedData(data.results);
-            console.log(results);
-            console.log(data);
-            if (data.errors) {
-                // Handle errors if any (optional)
-                console.error("Error fetching images:", data.errors);
-              } else {
-                let imageUrls = data.results.map((image) => image.urls.regular); // Extract image URLs
-                console.log("Image URLs:", imageUrls); // Now you have the image URLs
-              }
-        }
-        
+    const styles={
+        color:'white',
+        width:'100vw',
     }
 
     return(
         <div>
-            Main
+            <h1>Upload your image</h1>
             <input type="file" accept="image/*" onChange={handleImageChange} />
-            <button onClick={loadUploadedImage}>search</button>
+            {/* <button onClick={loadUploadedImage}>search</button> */}
             {error && <span style={{color:'red'}}>{error}</span>}
-            {/* <p>The Image you are inserted</p> */}
-            {/* <img src={image} alt={image.name} className='' /> */}
-            <button onClick={fetchImages}>fetch</button>
-            {
-                fetchedData.length > 0 && fetchedData.map((doc,index)=>(
-                    <div key={index}>
-                        <img src={doc.urls.regular} alt={doc.alt_description} />
-                        <p>{doc.alt_description}</p>
-                    </div>
-                ))
-                
-            }
+            {imageUrl&& <p>The Image you are inserted</p> }
+            <img src={imageUrl} alt={image.name} className='' />
+            {imageUrl&& <button onClick={anwers} className='fetchBtn'>fetch the results</button>}
+            <p style={{color:'red'}}>{
+                apiError
+            }</p>
+            <hr style={styles} />
         </div>
     )
 }

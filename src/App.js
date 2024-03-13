@@ -1,13 +1,14 @@
 import './App.css';
 import Hero from './hero';
-// import Main from './main';
+import Main from './main';
 
 const  App=()=> {
  
   return (
     <div className="App">
+       <Main/>
       <Hero/>
-      {/* <Main/> */}
+     
     </div>
   );
 }
